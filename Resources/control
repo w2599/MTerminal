@@ -1,0 +1,14 @@
+Package: mterminal
+Version: @VERSION@
+Architecture: iphoneos-arm
+Maintainer: Hayden Seay <me@diatr.us>
+Depends: zsh, coreutils, system-cmds, firmware (>= 11.0)
+Conflicts: com.officialscheduler.mterminal
+Replaces: com.officialscheduler.mterminal
+Provides: com.officialscheduler.mterminal (= @VERSION@)
+Section: Utilities
+Priority: standard
+Description: A MobileTerminal fork
+Author: lordscotland <admin@officialscheduler.com>
+Name: MTerminal
+Tag: purpose::uikit, role::enduser
