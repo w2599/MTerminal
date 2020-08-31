@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C162F58F1FED4F0400112B23 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C162F58E1FED4F0400112B23 /* README.md */; };
 		C3757A6E1FEB804600A48503 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C3757A6D1FEB804600A48503 /* main.m */; };
 		C3757A841FEB806B00A48503 /* bell.caf in Resources */ = {isa = PBXBuildFile; fileRef = C3757A751FEB806A00A48503 /* bell.caf */; };
 		C3757A881FEB806B00A48503 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = C3757A791FEB806A00A48503 /* Default.png */; };
@@ -192,7 +191,6 @@
 				C3757A891FEB806B00A48503 /* Default@2x.png in Resources */,
 				C3757A881FEB806B00A48503 /* Default.png in Resources */,
 				C3757A8D1FEB806B00A48503 /* icon-60.png in Resources */,
-				C162F58F1FED4F0400112B23 /* README.md in Resources */,
 				C3757AF71FEB8DF400A48503 /* LaunchScreen.storyboard in Resources */,
 				C3757A8C1FEB806B00A48503 /* icon-40@3x.png in Resources */,
 				C3757A8B1FEB806B00A48503 /* icon-40@2x.png in Resources */,
