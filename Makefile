@@ -1,5 +1,5 @@
 BUNDLE  := com.officialscheduler.mterminal
-VERSION := 1.5
+VERSION := 1.5-2
 SED     := gsed
 
 .PHONY: all clean
