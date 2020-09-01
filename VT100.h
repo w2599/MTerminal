@@ -44,7 +44,7 @@ typedef struct screen_char_t {
 } screen_char_t;
 
 typedef struct screen_line_t {
-  volatile int32_t retain_count;
+  volatile _Atomic(int32_t) retain_count;
   size_t size;// size of character buffer in bytes
   screen_char_t buf[];// the actual characters
 } screen_line_t;
@@ -120,6 +120,7 @@ typedef struct screen_line_t {
 @property(nonatomic,readonly) CFStringRef title;
 @property(nonatomic,readonly) pid_t processID;
 @property(nonatomic,readonly) BOOL bellDeferred;
+@property(nonatomic, readonly) void ptyRead;
 -(id)initWithWidth:(CFIndex)_screenWidth height:(CFIndex)_screenHeight;
 -(CFIndex)numberOfLines;
 -(screen_char_t*)charactersAtLineIndex:(CFIndex)index length:(CFIndex*)length cursorColumn:(CFIndex*)cursorColumn;

@@ -1,5 +1,5 @@
 #include "VT100.h"
-#include <libkern/OSAtomic.h>
+#include <stdatomic.h>
 #include <pthread.h>
 #include <sys/event.h>
 #include <sys/ioctl.h>
@@ -60,11 +60,11 @@ static screen_line_t* screen_line_create(size_t size) {
   return line;
 }
 static screen_line_t* screen_line_retain(CFAllocatorRef allocator,screen_line_t* line) {
-  OSAtomicIncrement32Barrier(&line->retain_count);
+  atomic_fetch_add(&line->retain_count, 1);
   return line;
 }
 static void screen_line_release(CFAllocatorRef allocator,screen_line_t* line) {
-  if(OSAtomicDecrement32Barrier(&line->retain_count)==0){free(line);}
+  if(atomic_fetch_add(&line->retain_count, 1)==0){free(line);}
 }
 
 @implementation VT100

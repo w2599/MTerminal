@@ -17,7 +17,7 @@
 static BOOL scanRGB(NSString* vstr,unsigned int* cv) {
   return ([vstr isKindOfClass:[NSString class]]
    && [[NSScanner scannerWithString:vstr] scanHexInt:cv])?
-   (*cv&=0xffffff,YES):NO;
+    ((void)(*cv&=0xffffff),YES):NO;
 }
 static CGColorRef createColor(CGColorSpaceRef cspace,unsigned int cv) {
   return CGColorCreate(cspace,(CGFloat[]){
@@ -164,7 +164,7 @@ static NSString* getTitle(VT100* terminal) {
         else {
           key=keys.list[i];
           NSString* vstr=[[kvstr substringFromIndex:pos+1]
-           stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+           stringByRemovingPercentEncoding];
           values.list[i]=(key==keys.palette)?[vstr componentsSeparatedByString:@","]:
            (key==keys.fontSize)?[NSNumber numberWithDouble:vstr.doubleValue]:
            (key==keys.fontProportional)?vstr.boolValue?(id)kCFBooleanTrue:(id)kCFNull:vstr;
@@ -267,7 +267,7 @@ static NSString* getTitle(VT100* terminal) {
      (const void**)&kCTFontAttributeName,(const void**)&ctFont,1,NULL,NULL);
     CFAttributedStringRef ssobj=CFAttributedStringCreate(NULL,
      ([sample isKindOfClass:[NSString class]] && (sslength=sample.length))?
-     (CFStringRef)sample:(sslength=1,CFSTR("$")),ssattr);
+                                                         (CFStringRef)sample:((void)(sslength=1),CFSTR("$")),ssattr);
     CTLineRef ssline=CTLineCreateWithAttributedString(ssobj);
     CGFloat ascent,descent,leading;
     CGFloat _colWidth=CTLineGetTypographicBounds(ssline,
@@ -400,15 +400,6 @@ static NSString* getTitle(VT100* terminal) {
     if(activeIndex==count){activeIndex--;}
     else {previousIndex=NSNotFound;}
     activeTerminal=[allTerminals objectAtIndex:activeIndex];
-    [self screenSizeDidChange];
-  }
-}
--(void)actionSheet:(UIActionSheet*)sheet clickedButtonAtIndex:(NSInteger)index {
-  if(index==sheet.destructiveButtonIndex){[self closeWindow];}
-  else if(index!=sheet.cancelButtonIndex){
-    activeIndex=index;
-    activeTerminal=(index<allTerminals.count)?
-     [allTerminals objectAtIndex:index]:nil;
     [self screenSizeDidChange];
   }
 }
@@ -643,27 +634,55 @@ static NSString* getTitle(VT100* terminal) {
       case kTapZoneRight:key=kVT100KeyRightArrow;break;
       case kTapZoneTopRight:
         if(activeTerminal.isRunning){
-          UIActionSheet* sheet=[[UIActionSheet alloc]
-           initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel"
-           destructiveButtonTitle:@"Force Quit" otherButtonTitles:nil];
-          [sheet showInView:gesture.view];
+          UIAlertController* sheet=[UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+          [sheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+              [self dismissViewControllerAnimated:YES completion:^{
+              }];
+          }]];
+
+          [sheet addAction:[UIAlertAction actionWithTitle:@"Force Quit" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+              [self dismissViewControllerAnimated:YES completion:^{
+                  [self closeWindow];
+              }];
+          }]];
+          [self presentViewController:sheet animated:YES completion:nil];
           [sheet release];
         }
         else {[self closeWindow];}
         return;
       case kTapZoneBottomRight:{
-        UIActionSheet* sheet=[[UIActionSheet alloc]
-         initWithTitle:nil delegate:self cancelButtonTitle:nil
-         destructiveButtonTitle:nil otherButtonTitles:nil];
+        UIAlertController* sheet=[UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        [sheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            [self dismissViewControllerAnimated:YES completion:^{
+            }];
+        }]];
+        int index2 = -1;
+        int index;
         for (VT100* terminal in allTerminals){
-          [sheet addButtonWithTitle:[NSString stringWithFormat:@"%@%d: %@",
-           (terminal==activeTerminal)?@"\u2713 ":
-           terminal.bellDeferred?@"\u2407 ":@"",
-           terminal.processID,getTitle(terminal)]];
+          index = index2 + 1;
+          [sheet addAction:[UIAlertAction actionWithTitle:[NSString stringWithFormat:@"%@%d: %@",
+          (terminal==activeTerminal)?@"\u2713 ":
+          terminal.bellDeferred?@"\u2407 ":@"",
+          terminal.processID,getTitle(terminal)] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+              [self dismissViewControllerAnimated:YES completion:^{
+                  activeIndex=index;
+                  activeTerminal=(index<allTerminals.count)?
+                  [allTerminals objectAtIndex:index]:nil;
+                  [self screenSizeDidChange];
+              }];
+          }]];
+          index2 = index;
         }
-        [sheet addButtonWithTitle:@"(+)"];
-        sheet.cancelButtonIndex=[sheet addButtonWithTitle:@"Cancel"];
-        [sheet showInView:gesture.view];
+        index = index2 + 1;
+        [sheet addAction:[UIAlertAction actionWithTitle:@"(+)" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                   [self dismissViewControllerAnimated:YES completion:^{
+                       activeIndex=index;
+                       activeTerminal=(index<allTerminals.count)?
+                       [allTerminals objectAtIndex:index]:nil;
+                       [self screenSizeDidChange];
+                   }];
+        }]];
+        [self presentViewController:sheet animated:YES completion:nil];
         [sheet release];
         return;
       }
@@ -733,7 +752,7 @@ static NSString* getTitle(VT100* terminal) {
    initWithRootViewController:scratch];
   [scratch release];
   nav.navigationBar.barStyle=darkBG?UIBarStyleBlack:UIBarStyleDefault;
-  [self presentModalViewController:nav animated:YES];
+  [self presentViewController:nav animated:YES completion:nil];
   [nav release];
 }
 -(void)ctrlLock:(UIMenuController*)menu {

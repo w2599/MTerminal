@@ -1,17 +1,17 @@
 #include "MTRowView.h"
-#include <libkern/OSAtomic.h>
+#include <stdatomic.h>
 
 typedef struct hspan_t {
-  volatile int32_t retain_count;
+  volatile _Atomic(int32_t) retain_count;
   CGFloat x,y,width;
 } hspan_t;
 
 static hspan_t* hspan_retain(CFAllocatorRef allocator,hspan_t* span) {
-  OSAtomicIncrement32Barrier(&span->retain_count);
+  atomic_fetch_add(&span->retain_count, 1);
   return span;
 }
 static void hspan_release(CFAllocatorRef allocator,hspan_t* span) {
-  if(OSAtomicDecrement32Barrier(&span->retain_count)==0){free(span);}
+  if(atomic_fetch_add(&span->retain_count, 1)==0){free(span);}
 }
 
 @implementation MTRowView
