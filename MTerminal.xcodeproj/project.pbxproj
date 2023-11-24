@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		174283162AA02B1C002E5E7C /* MTSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 174283142AA02B1C002E5E7C /* MTSettingsController.m */; };
 		C3757A6E1FEB804600A48503 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C3757A6D1FEB804600A48503 /* main.m */; };
 		C3757A841FEB806B00A48503 /* bell.caf in Resources */ = {isa = PBXBuildFile; fileRef = C3757A751FEB806A00A48503 /* bell.caf */; };
 		C3757A881FEB806B00A48503 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = C3757A791FEB806A00A48503 /* Default.png */; };
@@ -29,6 +30,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		174283142AA02B1C002E5E7C /* MTSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTSettingsController.m; sourceTree = SOURCE_ROOT; };
+		174283152AA02B1C002E5E7C /* MTSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTSettingsController.h; sourceTree = SOURCE_ROOT; };
 		C162F58E1FED4F0400112B23 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C3757A5B1FEB804600A48503 /* MTerminal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MTerminal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3757A6D1FEB804600A48503 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -89,6 +92,8 @@
 		C3757A5D1FEB804600A48503 /* MTerminal */ = {
 			isa = PBXGroup;
 			children = (
+				174283152AA02B1C002E5E7C /* MTSettingsController.h */,
+				174283142AA02B1C002E5E7C /* MTSettingsController.m */,
 				C3757A971FEB807C00A48503 /* MTAppDelegate.h */,
 				C3757A9C1FEB807C00A48503 /* MTAppDelegate.m */,
 				C3757A931FEB807B00A48503 /* MTController.h */,
@@ -215,6 +220,7 @@
 				C3757AC01FEB837A00A48503 /* VT100.m in Sources */,
 				C3757AA01FEB807C00A48503 /* MTKBAvoiding.m in Sources */,
 				C3757AA31FEB807C00A48503 /* MTAppDelegate.m in Sources */,
+				174283162AA02B1C002E5E7C /* MTSettingsController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,11 +340,14 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
@@ -357,11 +366,14 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (

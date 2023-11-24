@@ -12,4 +12,5 @@ Description: A MobileTerminal fork
 Depiction: https://moreinfo.thebigboss.org/moreinfo/depiction.php?file=mterminalDp
 Author: lordscotland
 Name: MTerminal
+Icon: file:///Applications/MTerminal.app/icon-60@3x.png
 Tag: purpose::uikit, role::enduser

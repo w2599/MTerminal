@@ -1,8 +1,8 @@
 #import <UIKit/UIKit.h>
 
 @interface MTKBAvoiding : UIViewController {
-  CGFloat kbHeight;
-  BOOL deferAdjust;
+    CGFloat kbHeight;
+    BOOL deferAdjust;
 }
--(void)screenSizeDidChange;
+- (void)screenSizeDidChange;
 @end
