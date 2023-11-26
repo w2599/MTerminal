@@ -113,15 +113,29 @@ static void screen_line_release(CFAllocatorRef allocator, screen_line_t *line) {
         indexMap = CFArrayCreateMutable(NULL, 0, NULL);
         linesChanged = CFSetCreateMutable(NULL, 0, NULL);
         [self ptyReset];
-        int fd;
-        pid_t pid = forkpty(&fd, NULL, NULL, &(struct winsize) {
-            .ws_col = screenWidth, .ws_row = screenHeight
-        });
+        int master;
+        int slave;
+        pid_t pid = openpty( &master, &slave, NULL, NULL, &(struct winsize){.ws_col = screenWidth, .ws_row = screenHeight});
         if (pid == -1) {
-            raiseException(@"forkpty");
-        } else if (pid == 0) {
-            if (execve("/var/jb/usr/bin/login", (char *[]){"login", "-fp", getlogin(), NULL}, (char *[]){"TERM=xterm-256color", "LANG=en_US.UTF-8", NULL}) == -1) raiseException(@"execve(login)");
-        } else {
+            raiseException(@"openpty");
+        }
+        grantpt(slave);
+        unlockpt(slave);
+        pid_t pid_ = fork();
+        if (pid_ == 0) {
+            close(master);
+            struct sigaction sa;
+            memset(&sa, 0, sizeof(struct sigaction));
+            //   sa.sa_handler = &handle_signal;
+            sigaction(SIGWINCH, &sa, NULL);
+            setsid();
+            login_tty(slave);
+            if (execve("/var/jb/usr/bin/login", (char *[]){"login", "-fp", getlogin(), NULL},
+                (char *[]){"TERM=xterm-256color", "LANG=en_US.UTF-8", NULL}) == -1) {
+                    raiseException(@"execve(login)");
+            }
+        } else if (pid_ != -1) {
+            close(slave);
             static int kqfd = -1;
             Boolean first = (kqfd == -1);
             // create singleton kqueue
@@ -130,21 +144,23 @@ static void screen_line_release(CFAllocatorRef allocator, screen_line_t *line) {
             }
             struct kevent changes[2];
             // register this pty
-            EV_SET(&changes[0], fd, EVFILT_READ, EV_ADD, 0, 0, self);
+            EV_SET(&changes[0], master, EVFILT_READ, EV_ADD, 0, 0, self);
             // first, register an event to reload the kevent loop
             // then on subsequent calls, trigger the reload event
-            EV_SET(&changes[1], 0, EVFILT_USER, first ? EV_ADD | EV_CLEAR : 0, first ? NOTE_FFNOP : NOTE_TRIGGER, 0, NULL);
+            EV_SET(&changes[1], 0, EVFILT_USER, first ? EV_ADD | EV_CLEAR : 0,
+                first ? NOTE_FFNOP : NOTE_TRIGGER, 0, NULL);
             if (kevent(kqfd, changes, 2, NULL, 0, NULL)) {
                 raiseException(@"kevent");
             }
             if (first) { // detach a separate thread to run the event loop
                 pthread_t thread;
-                if (pthread_create(&thread, NULL, kqRunEventLoop, &kqfd))
-                raiseException(@"pthread_create");
+                if (pthread_create(&thread, NULL, kqRunEventLoop, &kqfd)){
+                    raiseException(@"pthread_create");
+                }
                 pthread_detach(thread);
             }
-            processID = pid;
-            ptyfd = fd;
+            processID = pid_;
+            ptyfd = master;
         }
     }
     return self;

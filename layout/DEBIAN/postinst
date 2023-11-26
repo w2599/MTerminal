@@ -1,0 +1,19 @@
+#!/bin/bash
+PATH=/var/jb/bin:/var/jb/usr/bin:/var/jb/usr/local/bin:/var/jb/sbin:/var/jb/usr/sbin:$PATH
+
+chown 0:0 /var/jb/Applications/MTerminal.app/MTerminal
+
+chmod 4755 /var/jb/Applications/MTerminal.app/MTerminal
+
+chmod 4755 /var/jb/usr/bin/su
+
+chown 0:0 /var/jb/etc/sudo.conf
+chown 0:0 /var/jb/etc/sudoers
+
+chown 0:0 /var/jb/etc/sudoers.d
+chown 0:0 /var/jb/var/db/sudo/lectured
+
+chown 0:0 /var/jb/etc/sudoers.d/procursus
+
+
+exit 0

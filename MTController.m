@@ -881,7 +881,7 @@ static NSString *getTitle(VT100 *terminal) {
     UIBarButtonItem *downItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage systemImageNamed:@"arrow.down"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] style:UIBarButtonItemStylePlain target:self action:@selector(down:)];
     UIBarButtonItem *tabItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage systemImageNamed:@"arrow.right.to.line"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] style:UIBarButtonItemStylePlain target:self action:@selector(insertTab:)];
 	UIBarButtonItem *ctrlItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage systemImageNamed:@"chevron.up"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] style:UIBarButtonItemStylePlain target:self action:@selector(toggleCtrlLock:)];
-	UIBarButtonItem *pasteItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage systemImageNamed:@"paperclip"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] style:UIBarButtonItemStylePlain target:self action:@selector(paste:)];
+	UIBarButtonItem *pasteItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage systemImageNamed:@"arrow.up.doc.on.clipboard"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] style:UIBarButtonItemStylePlain target:self action:@selector(paste:)];
 	UIBarButtonItem *settingsItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage systemImageNamed:@"gearshape"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] style:UIBarButtonItemStylePlain target:self action:@selector(settings:)];
 	UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 
@@ -909,7 +909,9 @@ static NSString *getTitle(VT100 *terminal) {
 	[activeTerminal sendKey:kVT100KeyTab];
 }
 - (void)paste:(UIBarButtonItem *)sender {
-	[activeTerminal sendString:(CFStringRef)[UIPasteboard generalPasteboard].string];
+    if ([UIPasteboard generalPasteboard].string != nil) {
+        [activeTerminal sendString:(CFStringRef)[UIPasteboard generalPasteboard].string];
+    }
 }
 - (void)toggleCtrlLock:(UIBarButtonItem *)sender {
 	ctrlLock = !ctrlLock;
