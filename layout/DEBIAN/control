@@ -1,0 +1,9 @@
+Package: mterminal
+Name: MTerminal - xina210
+Version: 1.6+1
+Architecture: iphoneos-arm
+Description: A MobileTerminal fork
+Maintainer: zqbb
+Author: lordscotland <admin@officialscheduler.com>
+Depends: coreutils, firmware (>= 11.0), gettext-localizations, system-cmds, zsh
+Section: Utilities
